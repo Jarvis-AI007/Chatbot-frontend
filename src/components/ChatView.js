@@ -34,6 +34,7 @@ const ChatView = () => {
    * @param {string} newValue - The text of the new message.
    * @param {boolean} [ai=false] - Whether the message was sent by an AI or the user.
    */
+
   const updateMessage = (newValue, ai = false) => {
     const id = Date.now() + Math.floor(Math.random() * 1000000);
     const newMsg = {
@@ -62,10 +63,29 @@ const ChatView = () => {
     setFormValue('');
     updateMessage(newMsg, false);
 
-    const response = 'I am a bot. This feature will be coming soon.';
-    updateMessage(response, true);
-  };
+    try {
+      // Send a request to your Flask backend
+      const response = await fetch('http://localhost:5000/api/ask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: cleanPrompt }),
+      });
 
+      if (!response.ok) {
+        throw new Error('Request failed');
+      }
+
+      const responseData = await response.json();
+      const botAnswer = responseData.answer;
+
+      // Update the chat context with the received answer from the backend
+      updateMessage(botAnswer, true);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       // 👇 Get input value

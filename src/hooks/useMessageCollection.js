@@ -10,9 +10,9 @@ const useMessageCollection = () => {
     id: 1,
     createdAt: Date.now(),
     text: `
-      // Example JavaScript code
-      const greeting = 'Hello, world!';
-      console.log(greeting);
+      // Example:
+      Question: 'Hello';
+      Answer: "Hello , how can i help you ?
     `,
     ai: true,
   };
